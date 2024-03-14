@@ -1,117 +1,112 @@
-import 'dart:convert';
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_application_0/screens/profile_screen.dart';
 
-class LoginPage extends StatefulWidget {
-  const LoginPage({Key? key}) : super(key: key);
+enum SearchType { radio1, radio2 }
 
-  @override
-  _LoginPageState createState() => _LoginPageState();
-}
-
-class _LoginPageState extends State<LoginPage> {
-  final GlobalKey<FormState> _signInKey = GlobalKey();
-  final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
-
+class LoginPage extends StatelessWidget {
+  TextEditingController textEditingController =
+      TextEditingController(text: 'Initial value here');
+  late String _searchTerm;
+  SearchType _searchType = SearchType.radio1;
+  double _value = 1;
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Login'),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(20.0),
-        child: Form(
-          key: _signInKey,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              TextFormField(
-                controller: _emailController,
-                keyboardType: TextInputType.emailAddress,
-                decoration: const InputDecoration(
-                  labelText: 'Email',
-                ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Email is required.';
-                  } else if (!RegExp(r"^[a-zA-Z0-9.a-zA-Z]").hasMatch(value)) {
-                    return 'Please enter a valid email';
-                  }
-                  return null;
-                },
-              ),
-              TextFormField(
-                controller: _passwordController,
-                obscureText: true,
-                decoration: const InputDecoration(
-                  labelText: 'Password',
-                ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Password is required.';
-                  }
-                  return null;
-                },
-              ),
-              const SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: () {
-                  if (_signInKey.currentState!.validate()) {
-                    // Read user data from JSON file
-                    final file = File('../../data/users.json');
-                    final jsonString = file.readAsStringSync();
-                    final userData = json.decode(jsonString);
-
-                    // Check if user exists and credentials match
-                    final email = _emailController.text;
-                    final password = _passwordController.text;
-                    final matchedUser = userData['users'].firstWhere(
-                      (user) =>
-                          user['email'] == email &&
-                          user['password'] == password,
-                      orElse: () => null,
-                    );
-
-                    if (matchedUser != null) {
-                      // Navigate to profile page with user's data
-                      Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => ProfilePage(
-                            name:
-                                '${matchedUser['firstName']} ${matchedUser['lastName']}',
-                            email: matchedUser['email'],
-                          ),
-                        ),
-                      );
-                    } else {
-                      // Display error message for invalid credentials
-                      showDialog(
-                        context: context,
-                        builder: (context) => AlertDialog(
-                          title: Text('Error'),
-                          content: Text('Invalid email or password.'),
-                          actions: [
-                            TextButton(
-                              onPressed: () => Navigator.pop(context),
-                              child: Text('OK'),
-                            ),
-                          ],
-                        ),
-                      );
-                    }
-                  }
-                },
-                child: const Text('Sign In'),
-              ),
-            ],
+    return MaterialApp(
+        title: 'Cupertino App',
+        home: Scaffold(
+          appBar: AppBar(
+            title: Text('Cupertino App Bar'),
           ),
-        ),
-      ),
-    );
+          body: SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Column(
+                children: [
+                  Container(
+                    child: Text('Hello World'),
+                  ),
+                  Image.asset('assets/launch.png', width: 20),
+                  TextField(
+                      keyboardType: TextInputType.phone,
+                      decoration: InputDecoration(
+                          labelText: 'Cellphone',
+                          icon: Icon(Icons.settings_cell))),
+                  TextField(
+                    controller: textEditingController,
+                    onChanged: (String val) => _searchTerm = val,
+                    decoration: InputDecoration(
+                        labelText: 'Email',
+                        hintText: 'you@email.com',
+                        icon: Icon(Icons.contact_mail)),
+                  ),
+                  TextField(
+                    obscureText: true,
+                    decoration: InputDecoration(
+                        labelText: 'Password', icon: Icon(Icons.vpn_key)),
+                  ),
+                  TextButton(
+                      onPressed: () => {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const ProfilePage(
+                                  name: 'pepe',
+                                  email: 'croto@gmail.com',
+                                ),
+                              ),
+                            )
+                          },
+                      child: Text('Ingresar')),
+                  Checkbox(value: true, onChanged: (_) => true),
+                  Switch(value: false, onChanged: (_) => true),
+                  CheckboxListTile(
+                      title: Text('Remeber account'),
+                      value: false,
+                      onChanged: null),
+                  SwitchListTile(
+                      title: Text('Accept term of condtion'),
+                      value: true,
+                      onChanged: (_) => false),
+                  Row(
+                    children: <Widget>[
+                      Text('Radio1'),
+                      Radio<SearchType>(
+                        onChanged: (val) => _searchType = val!,
+                        groupValue: SearchType.radio1,
+                        value: _searchType,
+                      ),
+                      Text('Radio2'),
+                      Radio<SearchType>(
+                          onChanged: (val) => _searchType = val!,
+                          groupValue: SearchType.radio2,
+                          value: _searchType)
+                    ],
+                  ),
+                  Slider(
+                    label: _value.toString(),
+                    min: 0,
+                    max: 100,
+                    onChanged: (_) => true,
+                    value: _value,
+                  ),
+                  DropdownButton<SearchType>(
+                    value: _searchType,
+                    onChanged: (_) => true,
+                    items: <DropdownMenuItem<SearchType>>[
+                      DropdownMenuItem(
+                        value: SearchType.radio1,
+                        child: Text('Web'),
+                      ),
+                      DropdownMenuItem(
+                        value: SearchType.radio2,
+                        child: Text('Mobile'),
+                      )
+                    ],
+                  )
+                ],
+              ),
+            ),
+          ),
+        ));
   }
 }

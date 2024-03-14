@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import './new_page.dart';
 
 class AboutPage extends StatelessWidget {
   const AboutPage({Key? key});
@@ -18,13 +19,16 @@ class AboutPage extends StatelessWidget {
             heightFactor: 0.2,
             child: ElevatedButton(
               child: const Text(
-                "Tap",
+                "Goto page 2",
                 style: TextStyle(
                   fontSize: 20,
                 ),
               ),
               onPressed: () {
-                print('Button clicked!');
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const NewPage()),
+                );
               },
             ),
           ),

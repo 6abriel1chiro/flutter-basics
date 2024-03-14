@@ -127,7 +127,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   },
                   child: Text('Login'),
                 ),
-                SizedBox(width: 16),
+                const SizedBox(width: 16),
                 ElevatedButton(
                   onPressed: () {
                     Navigator.push(
