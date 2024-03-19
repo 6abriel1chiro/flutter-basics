@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class NewPage extends StatefulWidget {
@@ -9,42 +8,57 @@ class NewPage extends StatefulWidget {
 }
 
 class _NewPageState extends State<NewPage> {
-  int counter = 0;
+  TextEditingController firstNumberController = TextEditingController();
+  TextEditingController secondNumberController = TextEditingController();
+  int sum = 0;
 
-  void _incrementCounter() {
+  @override
+  void dispose() {
+    firstNumberController.dispose();
+    secondNumberController.dispose();
+    super.dispose();
+  }
+
+  void _calculateSum() {
+    int firstNumber = int.tryParse(firstNumberController.text) ?? 0;
+    int secondNumber = int.tryParse(secondNumberController.text) ?? 0;
+
     setState(() {
-      counter++;
+      sum = firstNumber + secondNumber;
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    return CupertinoPageScaffold(
-      navigationBar: const CupertinoNavigationBar(
-        middle: Text('Second Route'),
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Second Route'),
       ),
-      child: Center(
-        child: Container(
-          width: 200,
-          height: 200,
-          decoration: BoxDecoration(border: Border.all()),
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: FractionallySizedBox(
-              alignment: Alignment.bottomCenter,
-              widthFactor: 0.8,
-              heightFactor: 0.2,
-              child: ElevatedButton(
-                child: Text(
-                  '$counter',
-                  style: Theme.of(context).textTheme.headline4,
-                ),
-                onPressed: () {
-                  _incrementCounter();
-                },
-              ),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            TextFormField(
+              controller: firstNumberController,
+              keyboardType: TextInputType.number,
+              decoration: InputDecoration(labelText: 'First Number'),
             ),
-          ),
+            TextFormField(
+              controller: secondNumberController,
+              keyboardType: TextInputType.number,
+              decoration: InputDecoration(labelText: 'Second Number'),
+            ),
+            ElevatedButton(
+              onPressed: _calculateSum,
+              child: const Text('Calculate Sum'),
+            ),
+            const SizedBox(height: 20),
+            Text(
+              'Sum: $sum',
+              style: Theme.of(context).textTheme.headline5,
+            ),
+          ],
         ),
       ),
     );

@@ -16,10 +16,16 @@
       "deviceId": "emulator-5554"
     },
     {
+      "name": "Iphone12",
+      "request": "launch",
+      "type": "dart",
+      "deviceId": "30934271-F939-4E4A-8998-5A996155C574"
+    },
+    {
       "name": "IphoneSE",
       "request": "launch",
       "type": "dart",
-      "deviceId": "9B9B7D52-FE8E-4C25-9159-E2A98994FDE3"
+      "deviceId": "30934271-F939-4E4A-8998-5A996155C574"
     },
     {
       "name": "Chrome",
@@ -31,7 +37,7 @@
   "compounds": [
     {
       "name": "All devices",
-      "configurations": ["Android", "IphoneSE", "Chrome"]
+      "configurations": ["Android", "IphoneSE", "Iphone12", "Chrome"]
     }
   ]
 }
